@@ -207,11 +207,13 @@ int main(int argc, char **argv) {
         long double lat_mean  = stats_mean(statistics.latency);
         long double lat_stdev  = stats_stdev(statistics.latency, lat_mean);
         long double lat_within  = stats_within_stdev(statistics.latency, lat_mean, lat_stdev, 1);
-        long double lat_perc_50  = stats_percentile(statistics.latency, 50.0) / 1000000.0;
-        long double lat_perc_75  = stats_percentile(statistics.latency, 75.0) / 1000000.0;
-        long double lat_perc_90  = stats_percentile(statistics.latency, 90.0) / 1000000.0;
-        long double lat_perc_95  = stats_percentile(statistics.latency, 95.0) / 1000000.0;
-        long double lat_perc_99  = stats_percentile(statistics.latency, 99.0) / 1000000.0;
+
+        uint64_t lat_perc_50  = stats_percentile(statistics.latency, 50.0);
+        uint64_t lat_perc_75  = stats_percentile(statistics.latency, 75.0);
+        uint64_t lat_perc_90  = stats_percentile(statistics.latency, 90.0);
+        uint64_t lat_perc_95  = stats_percentile(statistics.latency, 95.0);
+        uint64_t lat_perc_99  = stats_percentile(statistics.latency, 99.0);
+
         printf("{\n");
         printf("    \"url\": \"%s\",\n", url);
         printf("    \"threads\": %"PRIu64",\n", cfg.threads);
@@ -232,17 +234,17 @@ int main(int argc, char **argv) {
         printf("    \"requests_stdev\": %Lf,\n", req_stdev);
         printf("    \"requests_min\": %"PRIu64",\n", statistics.requests->min);
         printf("    \"requests_max\": %"PRIu64",\n", statistics.requests->max);
-        printf("    \"requests_within_stdev\": %.2Lf,\n", req_within);
-        printf("    \"latency_mean\": %Lf,\n", lat_mean/1000000.0);
-        printf("    \"latency_stdev\": %Lf,\n", lat_stdev/1000000.0);
-        printf("    \"latency_min\": %f,\n", statistics.latency->min/1000000.0);
-        printf("    \"latency_max\": %f,\n", statistics.latency->max/1000000.0);
-        printf("    \"latency_within_stdev\": %.2Lf,\n", lat_within);
-        printf("    \"latency_percentile_50\": %.2Lf,\n", lat_perc_50);
-        printf("    \"latency_percentile_75\": %.2Lf,\n", lat_perc_75);
-        printf("    \"latency_percentile_90\": %.2Lf,\n", lat_perc_90);
-        printf("    \"latency_percentile_95\": %.2Lf,\n", lat_perc_95);
-        printf("    \"latency_percentile_99\": %.2Lf,\n", lat_perc_99);
+        printf("    \"requests_within_stdev\": %Lf,\n", req_within);
+        printf("    \"latency_mean\": %Lf,\n", lat_mean);
+        printf("    \"latency_stdev\": %Lf,\n", lat_stdev);
+        printf("    \"latency_min\": %llu,\n", statistics.latency->min);
+        printf("    \"latency_max\": %llu,\n", statistics.latency->max);
+        printf("    \"latency_within_stdev\": %Lf,\n", lat_within);
+        printf("    \"latency_percentile_50\": %llu,\n", lat_perc_50);
+        printf("    \"latency_percentile_75\": %llu,\n", lat_perc_75);
+        printf("    \"latency_percentile_90\": %llu,\n", lat_perc_90);
+        printf("    \"latency_percentile_95\": %llu,\n", lat_perc_95);
+        printf("    \"latency_percentile_99\": %llu,\n", lat_perc_99);
         printf("    \"errors_connect\": %d,\n", errors.connect);
         printf("    \"errors_read\": %d,\n", errors.read);
         printf("    \"errors_write\": %d,\n", errors.write);
