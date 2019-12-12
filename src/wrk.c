@@ -208,6 +208,9 @@ int main(int argc, char **argv) {
         long double lat_stdev  = stats_stdev(statistics.latency, lat_mean);
         long double lat_within  = stats_within_stdev(statistics.latency, lat_mean, lat_stdev, 1);
 
+        uint64_t lat_perc_5   = stats_percentile(statistics.latency, 5.0);
+        uint64_t lat_perc_10  = stats_percentile(statistics.latency, 10.0);
+        uint64_t lat_perc_25  = stats_percentile(statistics.latency, 25.0);
         uint64_t lat_perc_50  = stats_percentile(statistics.latency, 50.0);
         uint64_t lat_perc_75  = stats_percentile(statistics.latency, 75.0);
         uint64_t lat_perc_90  = stats_percentile(statistics.latency, 90.0);
@@ -240,6 +243,9 @@ int main(int argc, char **argv) {
         printf("    \"latency_min\": %llu,\n", statistics.latency->min);
         printf("    \"latency_max\": %llu,\n", statistics.latency->max);
         printf("    \"latency_within_stdev\": %Lf,\n", lat_within);
+        printf("    \"latency_percentile_5\": %llu,\n", lat_perc_5);
+        printf("    \"latency_percentile_10\": %llu,\n", lat_perc_10);
+        printf("    \"latency_percentile_25\": %llu,\n", lat_perc_25);
         printf("    \"latency_percentile_50\": %llu,\n", lat_perc_50);
         printf("    \"latency_percentile_75\": %llu,\n", lat_perc_75);
         printf("    \"latency_percentile_90\": %llu,\n", lat_perc_90);
