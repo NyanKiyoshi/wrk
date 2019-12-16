@@ -255,8 +255,28 @@ int main(int argc, char **argv) {
         printf("    \"errors_read\": %d,\n", errors.read);
         printf("    \"errors_write\": %d,\n", errors.write);
         printf("    \"errors_timeout\": %d,\n", errors.timeout);
-        printf("    \"errors_status\": %d\n", errors.status);
-        printf("}");
+        printf("    \"errors_status\": %d,\n", errors.status);
+        printf("    \"latency\": {");
+
+        uint64_t cur_latency = statistics.latency->min;
+        uint64_t prev_latency;
+        uint64_t count;
+
+        while (cur_latency <= statistics.latency->max) {
+            count = statistics.latency->data[cur_latency];
+            prev_latency = cur_latency++;
+
+            if (count > 0) {
+                printf(
+                    "\"%llu\": %llu%s",
+                    prev_latency,
+                    count,
+                    (cur_latency <= statistics.latency->max) ? "," : ""
+                );
+            }
+            
+        }
+        printf("}}");
     }
 
     return 0;
