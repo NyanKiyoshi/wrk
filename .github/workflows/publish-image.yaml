@@ -80,6 +80,8 @@ jobs:
           build-args: |
             COMMIT_ID=${{ github.sha }}
             VERSION=${{ env.VERSION }}
+          cache-from: type=gha,scope=buildx
+          cache-to: type=gha,scope=buildx
 
       - name: Output image digest
         run: |
