@@ -7,7 +7,7 @@ on:
       - "[0-9]+.[0-9]+.[0-9]+*"
 
 jobs:
-  docker:
+  publisher:
     runs-on: ubuntu-20.04
     permissions:
       contents: read
@@ -21,7 +21,7 @@ jobs:
       - name: Get image name
         id: image
         run: |
-          IMAGE_NAME=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')
+          IMAGE_NAME=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
           echo "image_name=ghcr.io/${IMAGE_NAME}" >> $GITHUB_OUTPUT
 
       - name: Prepare Release Tags
@@ -39,9 +39,9 @@ jobs:
         run: |
           # Version name is the branch name
           # Slashes are substituted by dashes
-          CLEAN_BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/} | tr / -)
+          CLEAN_BRANCH_NAME=$(echo "${GITHUB_REF#refs/heads/}" | tr / -)
           TAGS=$"\
-          ghcr.io/${{ steps.image.outputs.image_name }}:${CLEAN_BRANCH_NAME}}
+          ghcr.io/${{ steps.image.outputs.image_name }}:${CLEAN_BRANCH_NAME}
           "
           # Set version name for open-containers version label as:
           # <branch>-<drift>-g<6-digit-hash>
@@ -69,7 +69,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and Push
-        id: docker_build
+        id: build_push
         uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671  # v4.0.0
         with:
           builder: ${{ steps.buildx.outputs.name }}
@@ -84,5 +84,5 @@ jobs:
       - name: Output image digest
         run: |
           echo $"\
-            Digest: ${{ steps.docker_build.outputs.digest }}
+            Digest: ${{ steps.build_push.outputs.digest }}
             Tags: ${{ env.TAGS }}"
